@@ -14,9 +14,9 @@ export default function Home() {
 }
 
 const Easel = (props: { width: number; height: number }) => {
-  const fontHeight = 12;
-  const fontWidth = 10;
-
+  const fontHeight = 10;
+  const fontWidth = 5;
+  const [mouseDown, setMouseDown] = useState(false);
   const [finalRender, setFinalRender] = useState([] as string[][]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const Easel = (props: { width: number; height: number }) => {
     for (let i = 0; i < props.height / fontHeight; i++) {
       tmpArray[i] = [];
       for (let j = 0; j < props.width / fontWidth; j++) {
-        tmpArray[i].push(" ");
+        tmpArray[i].push(" ");
       }
     }
     setFinalRender(tmpArray);
@@ -45,7 +45,7 @@ const Easel = (props: { width: number; height: number }) => {
         return arr;
       }
     });
-    console.log(newArr)
+
     setFinalRender(newArr);
   }
 
@@ -53,18 +53,31 @@ const Easel = (props: { width: number; height: number }) => {
     <div
       className={styles.easelDiv}
       style={{ width: props.width, height: props.height }}
-      onClick={(click) => {
-        click.preventDefault();
-        
-        updateRender(
-          Math.trunc(click.clientX / fontWidth),
-          Math.trunc(click.clientY / fontHeight),
-          "#",
-        );
+      onMouseDown={(e) => {
+        e.preventDefault()
+        setMouseDown(true);
       }}
+      onMouseUp={() => setMouseDown(false)}
     >
       {finalRender.map((row, i) => {
-        return <p key={i}>{row.join("")}</p>;
+        return (
+          <div key={i}>
+            {row.map((char, j) => {
+              return (
+                <span
+                  key={j}
+                  onMouseOver={(client) => {
+                    if (mouseDown) {
+                      updateRender(j, i, "#");
+                    }
+                  }}
+                >
+                  {char}
+                </span>
+              );
+            })}
+          </div>
+        );
       })}
     </div>
   );
