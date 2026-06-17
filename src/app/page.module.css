@@ -1,6 +1,17 @@
 .easelDiv {
-  font-size: 10;
+ 
   color: black;
   
   background-color: rgb(155, 182, 255);
+}
+
+.char {
+  min-width: 15px;
+  min-height: 15px;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
