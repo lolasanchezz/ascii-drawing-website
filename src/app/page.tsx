@@ -2,16 +2,48 @@
 import styles from "./page.module.css";
 import { useState, useEffect } from "react";
 export default function Home() {
-  const width = 500;
-  const height = 500;
+  const width = window.innerWidth - 100;
+  const height = window.innerHeight-100;
+   const [size, setSize] = useState(1)
+    const [char, setChar] = useState("#")
+
+  const Toolbar = () => {
+   
+
+    return (
+      <div className = {styles.toolBar}>
+        <div className = {styles.sizes}>
+          <p onClick = {() => {setSize(1)}}>1</p>
+          <p onClick = {() => {setSize(2)}}>1</p>
+          <p onClick = {() => {setSize(3)}}>1</p>
+        </div>
+        <div className = {styles.charsBox}>
+           <p onClick = {() => {setChar("#")}}>#</p>
+          <p onClick = {() => {setChar(".")}}>.</p>
+          <p onClick = {() => {setChar("█")}}>█</p>
+        </div>
+      </div>
+    )
+
+  }
+
+
+
+
   return (
     <div className={styles.page}>
+      <h1>ascii drawer 3000</h1>
       <main className={styles.main}>
+        <Toolbar/>
         <Easel width={width} height={height}></Easel>
       </main>
     </div>
   );
 }
+
+
+
+
 
 const Easel = (props: { width: number; height: number }) => {
   const styleFontHeight = 12;

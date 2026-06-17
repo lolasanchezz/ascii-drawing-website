@@ -12,6 +12,20 @@
 
 .main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.toolBar{
+  display: flex;
+  flex-direction:row;
+  justify-content: space-around;
+  width: 80%;
+}
+
+.sizes, .charsBox {
+  display: flex;
+  flex-direction: row;
+  
 }
