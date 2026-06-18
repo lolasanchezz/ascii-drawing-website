@@ -21,9 +21,11 @@ body {
 }
 
 body {
+  white-space:  nowrap;
   min-height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-self: center;
   color: var(--foreground);
   background: var(--background);

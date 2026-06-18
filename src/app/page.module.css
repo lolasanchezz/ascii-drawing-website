@@ -1,5 +1,4 @@
 .easelDiv {
- 
   color: black;
   cursor: pointer;
   background-color: rgb(155, 182, 255);
@@ -13,24 +12,35 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: left;
-  align-items: left;
+
+  align-items: center;
 }
 
-.toolBar{
+.toolBar {
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   justify-content: space-around;
+  height: 20px;
   width: 80%;
 }
 
-.sizes, .charsBox {
+.sizes,
+.charsBox {
   display: flex;
   flex-direction: row;
-  
 }
 
-.sizes p {
-  margin: 0 5%;
-  border: 1px dotted black;
+.sizes p,
+.charsBox p {
+  margin: 0 2%;
+}
+
+
+.toolBar p {
+    cursor: pointer;
+
+}
+.main span {
+  font-family: monospace;
+  white-space: "pre";
 }
