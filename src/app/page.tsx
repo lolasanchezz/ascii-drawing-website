@@ -1,11 +1,39 @@
 "use client";
 import styles from "./page.module.css";
 import { useState, useEffect } from "react";
+  const styleFontHeight = 12;
+
+  const fontHeight = styleFontHeight * 1.2;
+  const fontWidth = styleFontHeight * 0.56;
+  const padding = 50
 export default function Home() {
-  const width = window.innerWidth - 100;
-  const height = window.innerHeight - 100;
+  const [dimensions, setDimensions] = useState({
+    w: 800,
+    h: 600
+  })
+  useEffect(() => {
+    const s = () => {setDimensions({
+      w: window.innerWidth - padding,
+      h: window.innerHeight - padding
+    })}
+    s()
+  }, [])
+
+
+  function makeEmptyArr(width: number, height: number) {
+    let tmpArray: string[][] = [];
+    for (let i = 0; i < height / fontHeight; i++) {
+      tmpArray[i] = [];
+      for (let j = 0; j < width / fontWidth; j++) {
+        //tmpArray[i].push("#");
+        tmpArray[i].push("⠀");
+      }
+    }
+    return tmpArray;
+  }
   const [size, setSize] = useState(1);
-  const [char, setChar] = useState("#");
+  const [pickedChar, setChar] = useState("#");
+  const [finalRender, setFinalRender] = useState(makeEmptyArr(dimensions.w, dimensions.h));
 
   const Toolbar = () => {
     return (
@@ -23,14 +51,14 @@ export default function Home() {
               setSize(3);
             }}
           >
-            1
+            3
           </p>
           <p
             onClick={() => {
               setSize(5);
             }}
           >
-            1
+            5
           </p>
         </div>
         <div className={styles.charsBox}>
@@ -60,31 +88,27 @@ export default function Home() {
     );
   };
 
-  const Easel = (props: { width: number; height: number }) => {
-    const styleFontHeight = 12;
-    const fontHeight = styleFontHeight * 1.2;
-    const fontWidth = styleFontHeight * 0.56;
+  return (
+    <div className={styles.page}>
+      <h1>ascii drawer 3000</h1>
+      <main className={styles.main}>
+        <Toolbar />
+        <Easel width={dimensions.w} height={dimensions.h} setFinalRender = {setFinalRender} finalRender={finalRender} pickedChar={pickedChar} size={size}></Easel>
+      </main>
+    </div>
+  );
+}
 
+  const Easel = (props: { width: number; height: number, setFinalRender: any, finalRender: string[][], pickedChar: string, size: number }) => {
     const [mouseDown, setMouseDown] = useState(false);
-    const [finalRender, setFinalRender] = useState([] as string[][]);
 
-    useEffect(() => {
-      let tmpArray = [];
-      for (let i = 0; i < props.height / fontHeight; i++) {
-        tmpArray[i] = [];
-        for (let j = 0; j < props.width / fontWidth; j++) {
-          //tmpArray[i].push("#");
-          tmpArray[i].push("⠀");
-        }
-      }
-      setFinalRender(tmpArray);
-    }, [props.width, props.height]);
     //unbelievable
     function updateRender(
       xPos: number,
       yPos: number,
       newChar: string,
       size: number,
+      finalRender: string[][]
     ) {
       //attempt to make circle brushes
       let pos: number[][] = [];
@@ -97,33 +121,13 @@ export default function Home() {
       } else {
         pos = [[xPos, yPos]];
       }
-     
+      const coords = new Set(pos.map(([x, y]) => `${x},${y}`));
+      console.log(pos);
       let curCoordInd = 0;
-      const newArr = finalRender.map((arr, i) => {
-        if (curCoordInd >= pos.length) {
-          console.log("reached end")
-          return arr}
-        if (i === pos[curCoordInd][1]) {
-          return arr.map((char, i2) => {
-            
-             if (curCoordInd >= pos.length) {
-          console.log("reached end")
-          return char}
-            if (i2 === pos[curCoordInd][0]) {
-              console.log("updated");
-              console.log(curCoordInd)
-              curCoordInd++;
-              return newChar;
-            } else {
-              return char;
-            }
-          });
-        } else {
-          return arr;
-        }
-      });
-
-      setFinalRender(newArr);
+      const newArr = finalRender.map((row, y) =>
+        row.map((char, x) => (coords.has(`${x},${y}`) ? newChar : char)),
+      );
+      return newArr
     }
 
     return (
@@ -140,7 +144,7 @@ export default function Home() {
         }}
         onMouseUp={() => setMouseDown(false)}
       >
-        {finalRender.map((row, i) => {
+        {props.finalRender.map((row, i) => {
           return (
             <div key={i}>
               {row.map((char, j) => {
@@ -150,7 +154,9 @@ export default function Home() {
                     key={j}
                     onMouseOver={(client) => {
                       if (mouseDown) {
-                        updateRender(j, i, "#", size);
+                        props.setFinalRender(arr => {
+                          const r = updateRender(j, i, props.pickedChar, props.size, arr)
+                          return r })
                       }
                     }}
                   >
@@ -164,14 +170,3 @@ export default function Home() {
       </div>
     );
   };
-
-  return (
-    <div className={styles.page}>
-      <h1>ascii drawer 3000</h1>
-      <main className={styles.main}>
-        <Toolbar />
-        <Easel width={width} height={height}></Easel>
-      </main>
-    </div>
-  );
-}

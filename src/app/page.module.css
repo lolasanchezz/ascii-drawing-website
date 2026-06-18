@@ -1,7 +1,7 @@
 .easelDiv {
  
   color: black;
-  
+  cursor: pointer;
   background-color: rgb(155, 182, 255);
 }
 
@@ -13,8 +13,8 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: left;
 }
 
 .toolBar{
@@ -28,4 +28,9 @@
   display: flex;
   flex-direction: row;
   
+}
+
+.sizes p {
+  margin: 0 5%;
+  border: 1px dotted black;
 }
