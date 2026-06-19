@@ -187,7 +187,7 @@ const Easel = (props: {
                   key={j}
                   onMouseOver={(client) => {
                     if (mouseDown) {
-                      props.setFinalRender((arr) => {
+                      props.setFinalRender((arr: string[][]) => {
                         const r = updateRender(
                           j,
                           i,
