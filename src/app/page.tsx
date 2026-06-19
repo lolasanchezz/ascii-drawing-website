@@ -6,112 +6,56 @@ const styleFontHeight = 12;
 const fontHeight = styleFontHeight * 1.2;
 const fontWidth = styleFontHeight * 0.56;
 const padding = 50;
+
+function makeEmptyArr(width: number, height: number) {
+  let tmpArray: string[][] = [];
+  for (let i = 0; i < height / fontHeight; i++) {
+    tmpArray[i] = [];
+    for (let j = 0; j < width / fontWidth; j++) {
+      //tmpArray[i].push("#");
+      tmpArray[i].push("⠀");
+    }
+  }
+  return tmpArray;
+}
+
 export default function Home() {
   const [dimensions, setDimensions] = useState({
-    w: typeof window !== "undefined"? (window.innerWidth - padding): 800,
-    h: typeof window !== "undefined"? (window.innerHeight - padding): 500,
+    w: typeof window !== "undefined" ? window.innerWidth - padding : 800,
+    h: typeof window !== "undefined" ? window.innerHeight - padding : 500,
   });
   useEffect(() => {
     const s = () => {
       setDimensions({
-        w: typeof window !== "undefined"? (window.innerWidth - padding): 800,
-    h: typeof window !== "undefined"? (window.innerHeight - padding): 500,
+        w: typeof window !== "undefined" ? window.innerWidth - padding : 800,
+        h: typeof window !== "undefined" ? window.innerHeight - padding : 500,
       });
     };
     s();
   }, []);
 
-  function makeEmptyArr(width: number, height: number) {
-    let tmpArray: string[][] = [];
-    for (let i = 0; i < height / fontHeight; i++) {
-      tmpArray[i] = [];
-      for (let j = 0; j < width / fontWidth; j++) {
-        //tmpArray[i].push("#");
-        tmpArray[i].push("⠀");
-      }
-    }
-    return tmpArray;
-  }
   const [size, setSize] = useState(1);
   const [pickedChar, setChar] = useState("#");
+  const [bgColor, setBgColor] = useState("#8894ff");
+  const [tempColor, setTempColor] = useState("#8894ff");
   const [finalRender, setFinalRender] = useState(
     makeEmptyArr(dimensions.w, dimensions.h),
   );
-
-  const Toolbar = () => {
-    return (
-      <div className={styles.toolBar}>
-        <div className={styles.sizes}>
-          <p>brush size:</p>
-          <p
-            onClick={() => {
-              setSize(1);
-            }}
-          >
-            1
-          </p>
-          <p
-            onClick={() => {
-              setSize(3);
-            }}
-          >
-            3
-          </p>
-          <p
-            onClick={() => {
-              setSize(5);
-            }}
-          >
-            5
-          </p>
-          <h4>current size: {size}</h4>
-        </div>
-        <div className={styles.charsBox}>
-          <p>character:</p>
-          <p
-            onClick={() => {
-              setChar("#");
-            }}
-          >
-            #
-          </p>
-          <p
-            onClick={() => {
-              setChar(".");
-            }}
-          >
-            .
-          </p>
-          <p
-            onClick={() => {
-              setChar("█");
-            }}
-          >█
-            </p>
-            <p
-            onClick={() => {
-              setChar("█");
-            }}
-          ></p>
-          <p>
-            eraser
-          </p>
-          <h4>current character: {pickedChar}</h4>
-        </div>
-        <p
-        onClick={() => {
-              setFinalRender(makeEmptyArr(dimensions.w, dimensions.h))
-            }}
-        >clear everything</p>
-      </div>
-    );
-  };
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>ascii drawer 3000</h1>
-        <Toolbar />
+        <Toolbar
+          setSize={setSize}
+          setChar={setChar}
+          bgColor={bgColor}
+          setBgColor={setBgColor}
+          size={size}
+          dimensions={dimensions}
+          setFinalRender={setFinalRender}
+          pickedChar={pickedChar}
+        />
         <Easel
           width={dimensions.w}
           height={dimensions.h}
@@ -119,6 +63,7 @@ export default function Home() {
           finalRender={finalRender}
           pickedChar={pickedChar}
           size={size}
+          color={bgColor}
         ></Easel>
       </main>
     </div>
@@ -132,6 +77,7 @@ const Easel = (props: {
   finalRender: string[][];
   pickedChar: string;
   size: number;
+  color: string;
 }) => {
   const [mouseDown, setMouseDown] = useState(false);
 
@@ -170,6 +116,7 @@ const Easel = (props: {
         width: `${props.width}px`,
         height: `${props.height}px`,
         fontSize: styleFontHeight,
+        backgroundColor: props.color,
       }}
       onMouseDown={(e) => {
         e.preventDefault();
@@ -207,6 +154,98 @@ const Easel = (props: {
           </div>
         );
       })}
+    </div>
+  );
+};
+
+const Toolbar = (props: {
+  setSize: any;
+  setChar: any;
+  pickedChar: any;
+  size: any;
+  dimensions: any;
+  setFinalRender: any;
+  setBgColor: any;
+  bgColor: any;
+}) => {
+  return (
+    <div className={styles.toolBar}>
+      <div className={styles.sizes}>
+        <p>brush size:</p>
+        <p
+          onClick={() => {
+            props.setSize(1);
+          }}
+        >
+          1
+        </p>
+        <p
+          onClick={() => {
+            props.setSize(3);
+          }}
+        >
+          3
+        </p>
+        <p
+          onClick={() => {
+            props.setSize(5);
+          }}
+        >
+          5
+        </p>
+        <h4>current size: {props.size}</h4>
+      </div>
+      <div className={styles.charsBox}>
+        <p>character:</p>
+        <p
+          onClick={() => {
+            props.setChar("#");
+          }}
+        >
+          #
+        </p>
+        <p
+          onClick={() => {
+            props.setChar(".");
+          }}
+        >
+          .
+        </p>
+        <p
+          onClick={() => {
+            props.setChar("█");
+          }}
+        >
+          █
+        </p>
+        <p
+          onClick={() => {
+            props.setChar("█");
+          }}
+        ></p>
+        <p>eraser</p>
+        <h4>current character: {props.pickedChar}</h4>
+      </div>
+      <p
+        onClick={() => {
+          props.setFinalRender(
+            makeEmptyArr(props.dimensions.w, props.dimensions.h),
+          );
+        }}
+      >
+        clear everything
+      </p>
+      <div className={styles.colorPickerDiv}>
+        <p>background color:</p>
+        <input
+          type="color"
+          value={props.bgColor}
+          onChange={(e) => {
+            props.setBgColor(e.target.value);
+          }}
+          // onBlur = {() => setBgColor(tempColor)}
+        />
+      </div>
     </div>
   );
 };
