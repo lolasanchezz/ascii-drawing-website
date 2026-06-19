@@ -35,10 +35,8 @@
   margin: 0 2%;
 }
 
-
 .toolBar p {
-    cursor: pointer;
-
+  cursor: pointer;
 }
 .main span {
   font-family: monospace;
