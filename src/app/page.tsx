@@ -8,14 +8,14 @@ const fontWidth = styleFontHeight * 0.56;
 const padding = 50;
 export default function Home() {
   const [dimensions, setDimensions] = useState({
-    w: window.innerWidth - padding,
-    h: window.innerHeight - padding,
+    w: typeof window !== "undefined"? (window.innerWidth - padding): 800,
+    h: typeof window !== "undefined"? (window.innerHeight - padding): 500,
   });
   useEffect(() => {
     const s = () => {
       setDimensions({
-        w: window.innerWidth - padding,
-        h: window.innerHeight - padding,
+        w: typeof window !== "undefined"? (window.innerWidth - padding): 800,
+    h: typeof window !== "undefined"? (window.innerHeight - padding): 500,
       });
     };
     s();
